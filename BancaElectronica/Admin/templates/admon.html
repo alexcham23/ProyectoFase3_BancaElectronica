@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styleAdmin.css' %}">
+    <title>Banca Administrativa</title>
+</head>
+<body>
+    <main>
+        <div class="content">
+            <header></header>
+            <input type="checkbox" id="check">
+            <label for="check" class="check"><img src="{% static 'Icon/menu.png' %}"/></label>
+            <h2> Administracion Banco El Ahorro</h2>
+            
+            <nav class="menu">
+                <ul>
+                    <li>Creacion de Cliente
+                        <ul>
+                            <li><a href="{% url 'Persona' %}">Cliente Individual</a></li>
+                            <li><a href="{% url 'Company' %}">Cliente Empresarial</a></li>
+                        </ul>
+                    </li>
+                    <li>Creacion Cuenta
+                        <ul>
+                            <li><a href="{% url 'Cmonetaria' %}">Cuenta Monetaria</a></li>
+                            <li><a href="{% url 'Cahorro' %}">Cuenta Ahorro</a></li>
+                            <li><a href="{% url 'Cplazo' %}">Cuenta Plazo Fijo</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Cobro Cheques</a></li>
+                    <li><a href="#">Creacion de Chequeras</a></li>
+                    <li><a href="#">Depositos</a></li>
+                    <li><a href="#">DesBloqueo de Usuarios Usuario</a></li>
+                </ul>
+            </nav>
+        </div>
+
+    </main>
+    <div class="contenedor">
+        {% block content %}
+        <h1>hola mundo Cruel</h1>
+        {% endblock %}
+
+    </div>
+</body>
+</html>

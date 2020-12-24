@@ -1,0 +1,31 @@
+{% extends 'Cuenta.html'%}
+{% block content%}
+<h1 class="tl">CHEQUES PRE-AUTORIZADOS</h1>
+<hr class="linea1">
+<div class="serv">
+   
+    
+   <caption>
+    <form method="get" action="{% url 'EstadoCuenta' %}">
+        <label for="emisor">Cobrar a: </label>
+         <select name="Cobrar" id="cuentacobrar">
+             <option value="">Seleccione una Cuenta</option>
+         </select>
+         <label for="monto">Numero de Cheque:</label>
+         <input type="text" autofocus="" name="cheque" placeholder="">
+         <label for="monto">Monto:</label>
+         <input type="text" autofocus="" name="cui" placeholder="">
+         <label for="Nombre">Pago a la Orden de:</label>
+         <input type="text" autofocus="" name="receptor" placeholder="Nombre completo">
+
+         <button type="submit">ENVIAR</button>
+    </form>
+   
+   </caption>
+
+   <hr class="linea1">
+
+</div><br>
+
+
+{% endblock %}

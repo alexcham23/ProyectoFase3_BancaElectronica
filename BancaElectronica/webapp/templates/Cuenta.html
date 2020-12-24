@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Banca En Linea</title>
+</head>
+<body>
+    <header class="header">
+        <div class="container logonav">
+            <a href="#" class="logo">Banco El Ahorro</a>
+            <nav class="navegacion">
+                <ul>
+                    <li><a href="{% url 'EstadoCuenta' %}">ESTADO DE CUENTA</a></li>
+                    <li><a href="">PAGOS</a>
+                        <ul>
+                            <li><a href="{% url 'PlanillaProveedor' %}">PLANILLA O PROVEEDOR</a></li>
+                            <li><a href="{% url 'servicio' %}">SERVICIO</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="">SOLICITUDES</a>
+                    <ul>
+                        <li><a href="{% url 'Prestamo' %}">PRESTAMO</a></li>
+                        <li><a href="{% url 'precheques' %}">PRE-AUTORIZACION DE CHEQUES</a></li>
+                    </ul>
+                    </li>
+                    <li><a href="">OPERACIONES ENTRE CUENTAS</a>
+                    <ul>
+                        <li><a href="{% url 'propios' %}">TRANSFERENCIA ENTRE CUENTAS PROPIAS</a></li>
+                        <li><a href="{% url 'tercero' %}">TRANSFERENCIA ENTRE CUENTAS DE TERCEROS</a></li>
+                        <li><a href="{% url 'CuentaActiva' %}">SUSPENDER CUENTA</a></li>
+                        <li><a href="{% url 'CuentaSuspendida' %}">REACTIVAR CUENTA</a></li>
+                    </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main class="main">
+        <div class="contenedor">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="container">
+            <p>Desing By @JaimeArmira</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,100 @@
+*{
+   margin:0;
+   padding:0;
+   box-sizing: border-box;
+   font-family:Georgia, 'Times New Roman', Times, serif;
+}   
+main{
+    width:100%;
+    height:auto;
+    background: #34495e;
+}
+.check img{
+    width:65px;
+    border:5px;
+    margin-left: 50px;
+} 
+header{
+    width: 100%;
+    height: 80px;
+    left:0;
+    top:0;
+    position:fixed;
+    background-color:#17a086;
+}
+.content{
+    width: 100%;
+    max-width:100%;
+    background:#17a086;
+    margin: auto;
+    margin-top:80px;
+    top: -26px;
+}
+.content label{
+    position: fixed;
+    width: 100%;
+    max-width: 95%;
+    top:14px;
+    font-size:26px;
+    cursor: pointer;
+    z-index:10;
+}
+.content h2{
+    position: fixed;
+    width: 100%;
+    max-width: 95%;
+    top: 25px;
+    text-align: center;
+}
+#check{
+    display: none;
+}
+.menu{
+ position: fixed;
+ width: 300px;
+ height: 100%;
+ background:#2d3e50;
+ padding: 50px 0;
+}
+.menu ul{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.menu ul li{
+    display:block;
+}
+.menu li{
+    list-style: none;
+    padding:16px;
+    color:white;
+    cursor:pointer;
+}
+.menu a {
+    list-style:none;
+    padding:16px;
+    color:white;
+    text-decoration:none;
+}
+.menu ul li a{
+    display:block;
+    padding: 0.5rem 1rem;
+    transition: all 0.4s linear ;
+    border-radius:  5px;
+}
+.menu ul li a:hover{
+    background: #17a086;
+}
+.menu li:hover{
+    background:#c9913e
+}
+.menu > li{
+    float:left;
+} 
+.contenedor{
+    position: absolute;
+    width: 90%;
+    height: 100%;
+    max-width: 100%;
+    left:310px
+}

@@ -1,0 +1,23 @@
+{% extends 'Cuenta.html'%}
+{% block content%}
+<h1 class="tl">PAGO DE PLANILLA O PROVEEDORES</h1>
+<hr class="linea1">
+<div class="serv">
+   <h3> Agregar a un Proveedor o Empleado </h3>
+   <form method="get" action="{% url 'EstadoCuenta' %}">
+       <button type="submit">Agregar</button>
+   </form>
+   <hr class="linea1">
+   <table>
+    <tr>
+        <th>Moneda</th>
+        <th>No. Cuenta</th>
+        <th>Tipo</th>
+        <th>Nombre</th>
+        <th>Monto</th>
+    </tr>
+   </table>
+</div><br>
+
+
+{% endblock %}

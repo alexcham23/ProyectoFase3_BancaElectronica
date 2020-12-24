@@ -1,0 +1,21 @@
+{% extends 'Cuenta.html'%}
+{% block content%}
+<h1 class="tl">TRANSFERENCIA A TERCEROS</h1>
+<hr class="linea1">
+<div class="serv">
+   <h3> Agregar una cuenta de tercero </h3>
+   <form method="get" action="{% url 'EstadoCuenta' %}">
+       <button type="submit">Agregar</button>
+   </form>
+   <hr class="linea1">
+   <table>
+    <tr>
+        <th>Moneda</th>
+        <th>No. Cuenta</th>
+        <th>Tipo de Cuenta</th>
+        <th>Alias</th>
+        <th>Opciones</th>
+    </tr>
+   </table>
+</div>
+{% endblock %}

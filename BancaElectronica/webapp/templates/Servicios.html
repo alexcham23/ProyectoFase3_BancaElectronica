@@ -1,0 +1,22 @@
+{% extends 'Cuenta.html'%}
+{% block content%}
+<h1 class="tl">PAGO DE SERVICIOS</h1>
+<hr class="linea1">
+<div class="serv">
+   
+    
+   <caption>
+    <form method="get" action="{% url 'EstadoCuenta' %}">
+        <button type="submit">Agua</button>
+        <button type="submit">Luz</button>
+         <button type="submit">Telefono</button>
+    </form>
+   
+   </caption>
+
+   <hr class="linea1">
+
+</div><br>
+
+
+{% endblock %}

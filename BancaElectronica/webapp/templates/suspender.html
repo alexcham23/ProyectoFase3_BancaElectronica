@@ -1,0 +1,24 @@
+{% extends 'Cuenta.html'%}
+{% block content%}
+<h1 class="tl">SUSPENDER CUENTAS</h1>
+<hr class="linea1">
+<div class="serv">
+   
+    
+   <caption>
+    <form method="get" action="{% url 'EstadoCuenta' %}">
+        <label for="emisor">Cuentas Activas: </label>
+         <select name="activas" id="cuentaactivas">
+             <option value="">Seleccione una Cuenta</option>
+         </select>
+         <button type="submit">Suspender Cuenta</button>
+    </form>
+   
+   </caption>
+
+   <hr class="linea1">
+
+</div><br>
+
+
+{% endblock %}
