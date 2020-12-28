@@ -4,9 +4,11 @@
 <hr class="linea1">
 <div class="serv">
    <h3> Agregar una cuenta de tercero </h3>
-   <form method="get" action="{% url 'EstadoCuenta' %}">
-       <button type="submit">Agregar</button>
-   </form>
+   <form method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit" >Agregar</button>
+</form>
    <hr class="linea1">
    <table>
     <tr>

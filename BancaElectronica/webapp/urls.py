@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.urls import  path
 from webapp import views
 urlpatterns=[
-    path('',views.login),
+    path('',views.login,name='lobit'),
     path('bancaPrincipal/',views.BancaPrincipal,name='Principal'),
     path('EstadoCuenta/',views.EstadoCuenta,name='EstadoCuenta'),
     path('PlanillaProveedor/',views.PlanillaProveedor,name='PlanillaProveedor'),

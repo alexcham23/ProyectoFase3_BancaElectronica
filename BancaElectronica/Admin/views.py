@@ -236,3 +236,175 @@ def PlazoFijo(request):
     else:
         var={"form":form,}
     return render(request,'Plazofijo.html',vars)
+
+def CreditCard(request):
+    global db
+    form=Creditcard()
+    var={"form":form}
+    if request.method=="POST":
+        form=Creditcard(data=request.POST)
+        if form.is_valid():
+            datos=form.cleaned_data
+            c=db.cursor()
+            consulta='SELECT * from cuenta c, persona b where b.NitPersona=c.ClientePersona and c.NoCuenta=\''+str(datos.get("cuenta"))+'\';'
+            #print(consulta)
+            c.execute(consulta)
+            record=c.fetchone()
+            consulta= 'SELECT count(*) FROM creditcard where CuentaAsociada=\''+str(datos.get("cuenta"))+'\';'
+            c.execute(consulta)
+            contador=c.fetchone()
+            print(contador)
+            c.close()
+            fecha=str(datos.get("vencimiento")).split("/")
+            if int(fecha[0])<=12 and int(fecha[1])>20 and int(fecha[1])<100:
+                if record:
+                    if contador[0]==0:
+                        print("entro")
+                        if datos.get("Marca")=="PREFEPUNTOS" and datos.get("Limite") >= 5000 and datos.get("Limite")<=7000:
+                            c=db.cursor()
+                            consulta='INSERT INTO creditcard VALUES (\''+str(datos.get("tarjeta"))+'\',\'PREFEPUNTOS\',\'Q\',\''+str(datos.get("Limite"))+'\''
+                            consulta+=','+fecha[0]+','+fecha[0]+',\''+str(datos.get("cvv"))+'\',\'0\',\'0\',\'Individual\',\''+str(datos.get("cuenta"))+'\');'
+                            print(consulta)
+                            c.execute(consulta) 
+                            db.commit()
+                            c.close()   
+                            messages.info(request,'Se ha asociado la tarjeta al client')
+                        
+                        elif datos.get("Marca")=="CASHBACK" and datos.get("Limite") >= 5000 and datos.get("Limite")<=7000:
+                            c=db.cursor()
+                            consulta='INSERT INTO creditcard VALUES (\''+str(datos.get("tarjeta"))+'\',\'CASHBACK\',\'Q\',\''+str(datos.get("Limite"))+'\''
+                            consulta+=','+fecha[0]+','+fecha[1]+',\''+str(datos.get("cvv"))+'\',\'0\',\'0\',\'Individual\',\''+str(datos.get("cuenta"))+'\');'
+                            c.execute(consulta) 
+                            db.commit()
+                            c.close() 
+                            messages.info(request,'Se ha asociado la tarjeta al client')
+                        else:
+                            messages.error(request, 'limite entre 5000 - 7000')
+                    elif contador[0]==1:
+                        if datos.get("Marca")=="PREFEPUNTOS" and datos.get("Limite") >= 4500 and datos.get("Limite")<=5500:
+                            c=db.cursor()
+                            consulta='INSERT INTO creditcard VALUES (\''+str(datos.get("tarjeta"))+'\',\'PREFEPUNTOS\',\'Q\',\''+str(datos.get("Limite"))+'\''
+                            consulta+=','+fecha[0]+','+fecha[0]+',\''+str(datos.get("cvv"))+'\',\'0\',\'0\',\'Individual\',\''+str(datos.get("cuenta"))+'\');'
+                            print(consulta)
+                            c.execute(consulta) 
+                            db.commit()
+                            c.close()   
+                            messages.info(request,'Se ha asociado la tarjeta al client')
+                        
+                        elif datos.get("Marca")=="CASHBACK" and datos.get("Limite") >= 4500 and datos.get("Limite")<=5500:
+                            c=db.cursor()
+                            consulta='INSERT INTO creditcard VALUES (\''+str(datos.get("tarjeta"))+'\',\'CASHBACK\',\'Q\',\''+str(datos.get("Limite"))+'\''
+                            consulta+=','+fecha[0]+','+fecha[1]+',\''+str(datos.get("cvv"))+'\',\'0\',\'0\',\'Individual\',\''+str(datos.get("cuenta"))+'\');'
+                            c.execute(consulta) 
+                            db.commit()
+                            c.close() 
+                            messages.info(request,'Se ha asociado la tarjeta al client')
+                        else:
+                            messages.error(request, 'limite entre 4500 - 5500')                    
+                    elif contador[0]==3:
+                        if datos.get("Marca")=="PREFEPUNTOS" and datos.get("Limite") >= 3500 and datos.get("Limite")<=4000:
+                            c=db.cursor()
+                            consulta='INSERT INTO creditcard VALUES (\''+str(datos.get("tarjeta"))+'\',\'PREFEPUNTOS\',\'Q\',\''+str(datos.get("Limite"))+'\''
+                            consulta+=','+fecha[0]+','+fecha[0]+',\''+str(datos.get("cvv"))+'\',\'0\',\'0\',\'Individual\',\''+str(datos.get("cuenta"))+'\');'
+                            print(consulta)
+                            c.execute(consulta) 
+                            db.commit()
+                            c.close()   
+                            messages.info(request,'Se ha asociado la tarjeta al client')
+                        
+                        elif datos.get("Marca")=="CASHBACK" and datos.get("Limite") >= 3500 and datos.get("Limite")<=4000:
+                            c=db.cursor()
+                            consulta='INSERT INTO creditcard VALUES (\''+str(datos.get("tarjeta"))+'\',\'CASHBACK\',\'Q\',\''+str(datos.get("Limite"))+'\''
+                            consulta+=','+fecha[0]+','+fecha[1]+',\''+str(datos.get("cvv"))+'\',\'0\',\'0\',\'Individual\',\''+str(datos.get("cuenta"))+'\');'
+                            c.execute(consulta) 
+                            db.commit()
+                            c.close() 
+                            messages.info(request,'Se ha asociado la tarjeta al client')
+                        else:
+                            messages.error(request, 'limite entre 3500 - 4000')
+                    else:
+                        messages.error(request,'Ha llegado al limite de tarjetas por cliente')
+                
+                else: 
+                    c=db.cursor()
+                    consulta='SELECT * from cuenta c, empresa b where b.NitEmpresa=c.ClienteEmpresa and c.NoCuenta=\''+str(datos.get("cuenta"))+'\';'
+                    #print(consulta)
+                    c.execute(consulta)
+                    record=c.fetchone()  
+                    c.close()
+                    if  record:
+                        if contador[0]==0:
+                            print("entro2")
+                            if datos.get("Marca")=="PREFEPUNTOS" and datos.get("Limite") >= 10000 and datos.get("Limite")<=15000:
+                                c=db.cursor()
+                                consulta='INSERT INTO creditcard VALUES (\''+str(datos.get("tarjeta"))+'\',\'PREFEPUNTOS\',\'Q\',\''+str(datos.get("Limite"))+'\''
+                                consulta+=','+fecha[0]+','+fecha[0]+',\''+str(datos.get("cvv"))+'\',\'0\',\'0\',\'Empresa\',\''+str(datos.get("cuenta"))+'\');'
+                                print(consulta)
+                                c.execute(consulta) 
+                                db.commit()
+                                c.close()   
+                                messages.info(request,'Se ha asociado la tarjeta al client')
+                        
+                            elif datos.get("Marca")=="CASHBACK" and datos.get("Limite") >= 10000 and datos.get("Limite")<=15000:
+                                c=db.cursor()
+                                consulta='INSERT INTO creditcard VALUES (\''+str(datos.get("tarjeta"))+'\',\'CASHBACK\',\'Q\',\''+str(datos.get("Limite"))+'\''
+                                consulta+=','+fecha[0]+','+fecha[1]+',\''+str(datos.get("cvv"))+'\',\'0\',\'0\',\'Empresa\',\''+str(datos.get("cuenta"))+'\');'
+                                c.execute(consulta) 
+                                db.commit()
+                                c.close() 
+                                messages.info(request,'Se ha asociado la tarjeta al client')
+                            else:
+                                messages.error(request, 'limite Primera tarjeta entre 10000 - 15000')
+                        elif contador[0]==1:
+                            #print("entro2")
+                            if datos.get("Marca")=="PREFEPUNTOS" and datos.get("Limite") >= 12000 and datos.get("Limite")<=17000:
+                                c=db.cursor()
+                                consulta='INSERT INTO creditcard VALUES (\''+str(datos.get("tarjeta"))+'\',\'PREFEPUNTOS\',\'Q\',\''+str(datos.get("Limite"))+'\''
+                                consulta+=','+fecha[0]+','+fecha[0]+',\''+str(datos.get("cvv"))+'\',\'0\',\'0\',\'Empresa\',\''+str(datos.get("cuenta"))+'\');'
+                                print(consulta)
+                                c.execute(consulta) 
+                                db.commit()
+                                c.close()   
+                                messages.info(request,'Se ha asociado la tarjeta al client')
+                        
+                            elif datos.get("Marca")=="CASHBACK" and datos.get("Limite") >= 12000 and datos.get("Limite")<=17000:
+                                c=db.cursor()
+                                consulta='INSERT INTO creditcard VALUES (\''+str(datos.get("tarjeta"))+'\',\'CASHBACK\',\'Q\',\''+str(datos.get("Limite"))+'\''
+                                consulta+=','+fecha[0]+','+fecha[1]+',\''+str(datos.get("cvv"))+'\',\'0\',\'0\',\'Empresa\',\''+str(datos.get("cuenta"))+'\');'
+                                c.execute(consulta) 
+                                db.commit()
+                                c.close() 
+                                messages.info(request,'Se ha asociado la tarjeta al client')
+                            else:
+                                messages.error(request, 'limite Segunda tarjeta entre 12000 - 17000')     
+                        elif contador[0]==3:
+                            #print("entro2")
+                            if datos.get("Marca")=="PREFEPUNTOS" and datos.get("Limite") >= 12000 and datos.get("Limite")<=17000:
+                                c=db.cursor()
+                                consulta='INSERT INTO creditcard VALUES (\''+str(datos.get("tarjeta"))+'\',\'PREFEPUNTOS\',\'Q\',\''+str(datos.get("Limite"))+'\''
+                                consulta+=','+fecha[0]+','+fecha[0]+',\''+str(datos.get("cvv"))+'\',\'0\',\'0\',\'Empresa\',\''+str(datos.get("cuenta"))+'\');'
+                                print(consulta)
+                                c.execute(consulta) 
+                                db.commit()
+                                c.close()   
+                                messages.info(request,'Se ha asociado la tarjeta al client')
+                        
+                            elif datos.get("Marca")=="CASHBACK" and datos.get("Limite") >= 15000 and datos.get("Limite")<=19000:
+                                c=db.cursor()
+                                consulta='INSERT INTO creditcard VALUES (\''+str(datos.get("tarjeta"))+'\',\'CASHBACK\',\'Q\',\''+str(datos.get("Limite"))+'\''
+                                consulta+=','+fecha[0]+','+fecha[1]+',\''+str(datos.get("cvv"))+'\',\'0\',\'0\',\'Empresa\',\''+str(datos.get("cuenta"))+'\');'
+                                c.execute(consulta) 
+                                db.commit()
+                                c.close() 
+                                messages.info(request,'Se ha asociado la tarjeta al client')
+                            else:
+                                messages.error(request, 'limite Tercera tarjeta entre 15000 - 19000')     
+                        else:
+                            messages.error(request,'Ha llegado al limite de tarjetas por cliente')    
+                    else:
+                        messages.error(request,'El numero de cuenta o existe')                                                     
+            else:
+                messages.error("Error en la fecha de vencimiento")    
+                
+            
+    return render(request,'CreditCard.html',var)

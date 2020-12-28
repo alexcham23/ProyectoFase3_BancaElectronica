@@ -9,4 +9,5 @@ urlpatterns=[
     path('Cuenta-Monetaria/',views.monetaria,name='Cmonetaria'),
     path('Cuenta-Ahorro/',views.ahorro,name='Cahorro'),
     path('Cuenta-Plazo-Fijo/',views.PlazoFijo,name='Cplazo'),
+    path('Credit-Card/',views.CreditCard, name='credits'),
 ]

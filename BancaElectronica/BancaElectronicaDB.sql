@@ -134,7 +134,7 @@ foreign key (Transaccion) references TRANSACCION(IdTransaccion)
 create table CHEQUERA(
 NoChequera int primary key not null auto_increment,
 CantidadCheque int not null,
-CuentaAsociada bigint(8) unsigned zerofill,
+CuentaAsociada bigint(10) unsigned zerofill,
 foreign key (CuentaAsociada) references CUENTA(NoCuenta)
 );
 create table AUTORIZACION(
@@ -150,7 +150,6 @@ Chequera int ,
 foreign key (Chequera) references CHEQUERA(NoChequera),
 foreign key (Autorizacion) references AUTORIZACION(IdAutorizacion)
 );
-
 create table TRANSCHEQUE(
 ChequeNumero bigint(8) unsigned zerofill,
 Transaccion int,
@@ -159,7 +158,21 @@ foreign key (ChequeNumero) references CHEQUE(NoCheque),
 foreign key (Transaccion) references TRANSACCION(IdTransaccion)
 );
 
+create table CREDITCARD(
+NoTarjeta numeric(16,0) primary key not null,
+Marca varchar(50) not null,
+Moneda varchar(50) not null,
+Limite numeric(7,2) not null,
+vencimiento varchar(50) not null,
+Cvv numeric(3,0) not null,
+Puntos int not null,
+cashbak numeric(10,4) not null,
+Tipo varchar(50) not null,
+CuentaAsociada bigint(10) unsigned zerofill,
+foreign key (CuentaAsociada) references CUENTA(NoCuenta)
+);
 #editar el nombre de la columna contraseña por pasword
 ALTER TABLE USUARIO RENAME COLUMN Contraseña to Pasword;
-	
 ALTER TABLE cuenta ADD PlazoPagar int AFTER Monto;
+#ALTER TABLE creditcard ADD PuntosCash int AFTER Tipo;
+#drop table creditcard;

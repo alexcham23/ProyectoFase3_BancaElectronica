@@ -1,7 +1,10 @@
 from django import forms
 from django.db.models import fields
 from .models import *
-
+monedatipo=(
+        ("Q","Quetzales"),
+        ("$","Dolares")
+    )
 class Empresa(forms.Form):
     nit=forms.IntegerField(required=True, help_text='Campo Numerico')
     nombre_empresa=forms.CharField(required=True,max_length=50, help_text='Nombre de la empresa')
@@ -66,10 +69,7 @@ class Cuenta_Ahorro(forms.Form):
         fields=("Moneda","Interes","Monto","nit")
 
 class Plazo_Fijo(forms.Form):
-    monedatipo=(
-        ("Q","Quetzales"),
-        ("$","Dolares")
-    )
+    global monedatipo
     Moneda = forms.ChoiceField(required=True,choices=monedatipo)
     Interes=forms.DecimalField(required=True, max_digits=3, decimal_places=0, help_text="Ingrese un Monto") 
     Monto= forms.DecimalField(required=True, max_digits=10, decimal_places=2, help_text="Ingrese un Monto") 
@@ -84,3 +84,25 @@ class Plazo_Fijo(forms.Form):
     Plazo_A_Pagar= forms.ChoiceField(required=True,choices=Plazotipo)
     class meta:
         fields=("Moneda","Interes","Monto","Plazo_A_Pagar","nit")
+
+
+class Creditcard(forms.Form):
+    global monedatipo
+    tipo=(
+        ("PREFEPUNTOS","PREFEPUNTOS"),
+        ("CASHBACK","CASHBACK")
+    )
+    cuenta=forms.IntegerField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Ingrese el numero de cuenta',"type":"number","pattern":"[0-9]{0,12}"}), label="Cuenta Numero")
+    Marca=forms.ChoiceField(required=True,choices=tipo)
+    #Moneda=forms.ChoiceField(required=True, choices=monedatipo)
+    Limite= forms.DecimalField(required=True,max_digits=7, decimal_places=2, widget=forms.TextInput(attrs={'placeholder': 'Ingrese el limite de la tarjeta',"type":"number"}), label="Tarjeta Limite")
+    tarjeta= forms.IntegerField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Ingrese el limite de la tarjeta',"type":"number"}), label="No. Tarjeta")
+    cvv=forms.IntegerField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Ingrese el CCV',"type":"number"}), label="CCV Tarjeta")
+    vencimiento=forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': 'mm/yy',"type":"text"}), label="Fecha de Vencimiento")
+    Nombre=forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Ingrese el Nombre',"type":"text"}), label="Nombre del Propietario")
+    
+    
+    class meta:
+        fields=("cuenta","Marca","Limite","tarjeta","vencimiento","cvv","Nombre",)
+   
+    
