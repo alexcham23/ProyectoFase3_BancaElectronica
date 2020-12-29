@@ -1,0 +1,20 @@
+{% extends 'Cuenta.html'%}
+{% block content%}
+{% if messages %}
+<ul class="messages">
+       {% for message in messages %}
+       <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+       {% endfor %}
+</ul>
+{% endif %}
+<H1>REGISTRO DE PROVEEDOR</H1>
+    <hr class="linea1">
+        <h3>Agrega a un Empleado a Planilla</h3>
+        <form method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit"  value='1'>REGISTRAR</button>
+        </form>
+    <hr class="linea1">
+
+{% endblock %}

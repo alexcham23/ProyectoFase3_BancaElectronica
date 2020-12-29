@@ -6,7 +6,8 @@ urlpatterns=[
     path('',views.login,name='lobit'),
     path('bancaPrincipal/',views.BancaPrincipal,name='Principal'),
     path('EstadoCuenta/',views.EstadoCuenta,name='EstadoCuenta'),
-    path('PlanillaProveedor/',views.PlanillaProveedor,name='PlanillaProveedor'),
+    path('Planilla/',views.Planilla,name='planilla'),
+    path('Proveedor/',views.Proveedor,name='proveedor'),
     path('Transferencia-a-Tercero/',views.Tercero,name='tercero'),
     path('Transferencia-Locales/',views.Locales,name='propios'),
     path('CuentasActivas/',views.CuentaActiva,name='CuentaActiva'),
@@ -14,5 +15,6 @@ urlpatterns=[
     path('servicios/',views.Servicio,name='servicio'),
     path('Pre-Autorizacion-Cheques',views.PreCheques,name='precheques'),
     path('Prestamo/',views.Prestamo,name='Prestamo'),
+    path('Registro-Proveedores/',views.ProvRegister,name='registerprov')
     #path('Admin/',include('Admin.urls')),
 ]

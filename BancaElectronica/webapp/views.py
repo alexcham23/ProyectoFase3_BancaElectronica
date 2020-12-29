@@ -6,6 +6,7 @@ from django.http.response import HttpResponseRedirect
 from .forms import *
 from django.shortcuts import redirect, render
 db = MySQLdb.connect(host='localhost', user= 'Admin', password='Option65.la', db='BancaElectronica',port=7575, connect_timeout=30)
+numero=0
 # Create your views here.
 def BancaPrincipal(request):
     return render(request,'Cuenta.html')
@@ -13,9 +14,50 @@ def BancaPrincipal(request):
 def EstadoCuenta(request):
     return render(request,'Estado.html')
 
-def PlanillaProveedor(request):
-    return render(request,'Planpro.html')
+def Planilla(request):
+    return render(request,'Planilla.html')
+def Proveedor(request):
+    global db,numero
+    c=db.cursor()
+    consulta='SELECT * FROM empresa where Usuario=%s'
+    print(numero)
+    c.execute(consulta,str(numero))
+    Nit=c.fetchone()  
+    c.close()
+    print(Nit[0])
+    c= db.cursor(MySQLdb.cursors.DictCursor)
+    consulta='SELECT LPAD(CuentaReceptora, 10, "0") as cuenta,Nombre,MontoPago,TiempoPago FROM pago_empresarial where TipoPago=\'Proveedor\' and NitEmpresa=\''+str(Nit[0])+'\'' 
+    c.execute(consulta)
+    datos= c.fetchall()
+    print(datos[0])
+    var={'datos': datos}
+    if request.method=="POST":
+        return redirect('registerprov')
+    return render(request, 'Proveedor.html', var)
 
+
+def ProvRegister(request):
+    global db,numero
+    form=PagoEmpresarial()
+    var={"form":form}
+    if request.method=="POST":
+        form=PagoEmpresarial(data=request.POST)
+        if form.is_valid():   
+            datos=form.cleaned_data
+            c= db.cursor()
+            consulta='SELECT * FROM empresa where Usuario=%s'
+            print(numero)
+            c.execute(consulta,str(numero))
+            Nit=c.fetchone()
+            print(Nit)
+            consulta='INSERT INTO pago_empresarial VALUES(null,\'Proveedor\',\''+datos.get("Nombre")+'\',\''+datos.get("Tiempo")+'\','
+            consulta+='\''+str(datos.get("Sueldo"))+'\',\''+str(datos.get("Cuenta"))+'\',\''+str(Nit[0])+'\');'            
+            c.execute(consulta)
+            db.commit()
+            c.close()
+            return redirect('proveedor')
+                
+    return render(request,'RegistroProveedores.html',var)
 def Tercero(request):
     return render(request,'Terceros.html')
 
@@ -38,7 +80,7 @@ def Prestamo(request):
     return render(request,'Prestamo.html')
     
 def login(request):
-    global db
+    global db,numero
     acount=""
     form=Login()
     var={
@@ -55,7 +97,8 @@ def login(request):
             select='SELECT * FROM usuario WHERE Usuario=%s and Pasword=%s'
             c.execute(select,(username,password))
             acount=c.fetchone()
-            print(acount)
+            numero=acount[0]
+            print(numero)
             c.close()
             form=Login()
             if acount:
@@ -71,7 +114,7 @@ def login(request):
                     c.close()   
                     #messages.info(request,'Bienvenido Individual')
                     return redirect('Principal')
-                elif acount[3]=="Empresarial" and acount[4]<3:
+                elif acount[3]=="Empresa" and acount[4]<3:
                     c=db.cursor()
                     select='UPDATE usuario SET IngresosFallidos=%s WHERE IdUsuario=%s'   
                     c.execute(select,('0',str(acount[0])))

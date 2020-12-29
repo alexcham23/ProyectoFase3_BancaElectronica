@@ -1,0 +1,44 @@
+{% extends 'Cuenta.html'%}
+{% block content%}
+{% if messages %}
+<ul class="messages">
+       {% for message in messages %}
+       <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+       {% endfor %}
+</ul>
+{% endif %}
+<H1>PAGO DE PROVEEDORES</H1>
+    <hr class="linea1">
+    <h3>Agrega a un proveedor</h3>
+        <form method="POST">
+            {% csrf_token %}
+
+            <button type="submit" >AGREGAR</button>
+        </form>
+    <hr class="linea1"><br><br>
+    <table class="table table-bodered">
+        <thead>
+            <tr>
+                <td>No. CUENTA</td>
+                <td>NOMBRE</td>
+                <td>MONTO APAGAR</td>
+                <td>FORMA DE PAGO</td>
+                <td>OPCIONES</td>
+            </tr>
+        </thead>
+        <TBOdy>
+            {% if datos %}
+            {% for datos in datos %}
+            <tr>
+                <td>{{ datos.cuenta}}</td>
+                <td>{{ datos.Nombre }}</td>
+                <td>{{ datos.MontoPago  }}</td>
+                <td>{{ datos.TiempoPago }}</td>
+                <td>nada</td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+        </TBOdy>
+
+    </table>
+{% endblock %}
