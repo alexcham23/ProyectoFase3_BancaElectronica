@@ -7,14 +7,13 @@
        {% endfor %}
 </ul>
 {% endif %}
-<H1>REGISTRO DE PROVEEDOR</H1>
+<H1>PAGO DE PLANILLA</H1>
     <hr class="linea1">
-        <h3>Agrega a un Proveedor </h3>
+        <h3>Carga Masiva de Empleado a Planilla</h3>
         <form method="POST">
             {% csrf_token %}
             {{form.as_p}}
-            <button type="submit"  value='1'>REGISTRAR</button>
+            <button type="submit" >CARGAR</button>
         </form>
-    <hr class="linea1">
-
+        <hr class="linea1"><br><br>
 {% endblock %}

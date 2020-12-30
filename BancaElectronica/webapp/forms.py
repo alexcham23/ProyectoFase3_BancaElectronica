@@ -12,9 +12,19 @@ class terceros(forms.Form):
 
 class PagoEmpresarial(forms.Form):
     global tipo
-    Cuenta = forms.IntegerField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Ingrese el numero de Cuenta'}), label="Cuenta del Proveedor")
-    Nombre = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Ingrese el Nombre Proveedor'}), label="Nombre del Proveedor")
-    Sueldo = forms.DecimalField(required=True,max_digits=7, decimal_places=2, widget=forms.TextInput(attrs={'placeholder': 'Ingrese el Sueldo Apagar',"type":"number"}), label="Monto Apagar")
-    Tiempo =forms.ChoiceField(required=True,choices=tipo,label="Forma de Pago")
+    Cuenta = forms.IntegerField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Ingrese el numero de Cuenta'}), label="No. Cuenta")
+    Nombre = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Ingrese el Nombre '}), label="Nombre ")
+    MontoPago = forms.DecimalField(required=True,max_digits=7, decimal_places=2, widget=forms.TextInput(attrs={'placeholder': 'Ingrese el Sueldo Apagar',"type":"number"}), label="Monto Apagar")
+    TiempoPago =forms.ChoiceField(required=True,choices=tipo,label="Forma de Pago")
     class Meta:
-        fields=("Cuenta","Nombre","Sueldo","Tiempo")    
+        fields=("Cuenta","Nombre","MontoPago","TiempoPago")    
+        
+class Archivo(forms.Form):
+    archivo=forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Ingrese el link del archivo '}), label="Dirreccion Archivo CSV ")
+    class Meta:
+        fields=("archivo")
+
+class Pagoplani(forms.Form):
+    Password=forms.CharField(widget=forms.PasswordInput(),label="Contraseña",help_text="Ingrese su contraseña") 
+    class Meta:
+        fields=("Password")

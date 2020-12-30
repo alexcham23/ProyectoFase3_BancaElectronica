@@ -12,9 +12,40 @@
         <h3>Agrega a un Empleado a Planilla</h3>
         <form method="POST">
             {% csrf_token %}
-            {{form.as_p}}
-            <button type="submit"  value='1'>AGREGAR</button>
+
+            <button type="submit" name="agregar" value='1'>AGREGAR</button>
+            <button type="submit" name="archivo" value='2'> CARGAR ARCHIVO CSV</button>
         </form>
-    <hr class="linea1">
+        <hr class="linea1"><br><br>
+        <table class="table table-bodered">
+            <thead>
+                <tr>
+                    <td>No. CUENTA</td>
+                    <td>NOMBRE</td>
+                    <td>MONTO APAGAR</td>
+                    <td>FORMA DE PAGO</td>
+                    <td>OPCIONES</td>
+                </tr>
+            </thead>
+            <TBOdy>
+                {% if datos %}
+                {% for datos in datos %}
+                <tr>
+                    <td>{{ datos.cuenta}}</td>
+                    <td>{{ datos.Nombre }}</td>
+                    <td>{{ datos.MontoPago  }}</td>
+                    <td>{{ datos.TiempoPago }}</td>
+                    <td>
+                        <a class="btn" href="{% url 'editPLa' datos.id %}">Editar</a>
+                        <a class="btn" href="{% url 'Deletplan' datos.id %}">Eliminar</a>
+                        <a href="{% url 'pagoplan' datos.id %}">Pagar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                    <h2>No se encontraron registros Proveedores</h2>
+                {% endif %}
+            </TBOdy>
+        </table>    
 
 {% endblock %}

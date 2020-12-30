@@ -119,10 +119,11 @@ CuentaEmisora numeric(10,0) not null
 create table PAGO_EMPRESARIAL(
 IdPagoEmpresarial int primary key not null auto_increment,
 TipoPago varchar(50) not null,
+Nombre varchar(50) not null,
 TiempoPago varchar(50) not null,
-MontoPago numeric(6,2) not null,
-CuentaReceptora numeric(10,0) not null,
-CuentaPagadora numeric(10,0) not null
+MontoPago numeric(14,2) not null,
+CuentaReceptora bigint(10) unsigned zerofill not null,
+NitEmpresa numeric(8,0) not null
 );
 create table TRNSPAGO(
 PagoEmpresarial int,
@@ -131,6 +132,9 @@ primary key (PagoEmpresarial,Transaccion),
 foreign key (PagoEmpresarial) references PAGO_EMPRESARIAL(IdPagoEmpresarial),
 foreign key (Transaccion) references TRANSACCION(IdTransaccion)
 );
+drop table TRNSPAGO;
+drop table PAGO_EMPRESARIAL;
+
 create table CHEQUERA(
 NoChequera int primary key not null auto_increment,
 CantidadCheque int not null,
@@ -163,7 +167,8 @@ NoTarjeta numeric(16,0) primary key not null,
 Marca varchar(50) not null,
 Moneda varchar(50) not null,
 Limite numeric(7,2) not null,
-vencimiento varchar(50) not null,
+MesVencimiento int not null,
+AñoVencimiento int not null,
 Cvv numeric(3,0) not null,
 Puntos int not null,
 cashbak numeric(10,4) not null,
@@ -175,4 +180,4 @@ foreign key (CuentaAsociada) references CUENTA(NoCuenta)
 ALTER TABLE USUARIO RENAME COLUMN Contraseña to Pasword;
 ALTER TABLE cuenta ADD PlazoPagar int AFTER Monto;
 #ALTER TABLE creditcard ADD PuntosCash int AFTER Tipo;
-#drop table creditcard;
+drop table creditcard;

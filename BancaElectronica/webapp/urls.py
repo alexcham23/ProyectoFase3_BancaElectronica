@@ -1,5 +1,7 @@
+from typing import Reversible
 from django.conf.urls import include
 from django.contrib import admin
+from django.urls import reverse
 from django.urls import  path
 from webapp import views
 urlpatterns=[
@@ -15,6 +17,13 @@ urlpatterns=[
     path('servicios/',views.Servicio,name='servicio'),
     path('Pre-Autorizacion-Cheques',views.PreCheques,name='precheques'),
     path('Prestamo/',views.Prestamo,name='Prestamo'),
-    path('Registro-Proveedores/',views.ProvRegister,name='registerprov')
+    path('Registro-Proveedores/',views.ProvRegister,name='registerprov'),
+    path('Editar-Proveedor/<int:id>/',views.editproveedor,name='EditarProv'),
+    path('Delet-Proveedor/<int:id>/',views.deletprovedor,name='DeletProv'),
+    path('Registro-Empleado/',views.PlanRegister,name='PlanillaReg'),
+    path('Editar-Empleado/<int:id>/',views.EditPlanilla,name='editPLa'),
+    path('Eliminar-Empleado/<int:id>/',views.DeletPlanilla,name='Deletplan'),
+    path('LecturaCsv/',views.csvImport,name='csv'),
+    path('Autorizar-Pago-Empresarial/<int:id>/',views.PagoPlan,name='pagoplan'),
     #path('Admin/',include('Admin.urls')),
 ]

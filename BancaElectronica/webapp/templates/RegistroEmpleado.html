@@ -3,13 +3,13 @@
 {% if messages %}
 <ul class="messages">
        {% for message in messages %}
-       <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+       <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
        {% endfor %}
 </ul>
 {% endif %}
-<H1>REGISTRO DE PROVEEDOR</H1>
+<H1>REGISTRO DE EMPLEADO</H1>
     <hr class="linea1">
-        <h3>Agrega a un Proveedor </h3>
+        <h3>Agrega a un Empleado</h3>
         <form method="POST">
             {% csrf_token %}
             {{form.as_p}}

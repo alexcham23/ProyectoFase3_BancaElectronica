@@ -34,9 +34,15 @@
                 <td>{{ datos.Nombre }}</td>
                 <td>{{ datos.MontoPago  }}</td>
                 <td>{{ datos.TiempoPago }}</td>
-                <td>nada</td>
+                <td>
+                    <a class="btn" href="{% url 'EditarProv' datos.id %}">Editar</a>
+                    <a class="btn" href="{% url 'DeletProv' datos.id %}">Eliminar</a>
+                    <a href="">Pagar</a>
+                </td>
             </tr>
             {% endfor %}
+            {% else %}
+                <h2>No se encontraron registros Proveedores</h2>
             {% endif %}
         </TBOdy>
 
