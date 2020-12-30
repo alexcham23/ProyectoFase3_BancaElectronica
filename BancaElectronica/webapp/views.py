@@ -256,7 +256,7 @@ def csvImport(request):
             else:
                 messages.error(request,'El archivo no existe en la ruta indicada')
     return render(request,'csv.html',var)
-def PagoPlan(request):
+def PagoPlan(request,id):
     global db,numero
     c=db.cursor()
     consulta='SELECT * FROM empresa where Usuario=%s'
@@ -266,10 +266,60 @@ def PagoPlan(request):
     c.close()
     #print(Nit[0])
     c= db.cursor(MySQLdb.cursors.DictCursor)
-    consulta='SELECT IdPagoEmpresarial as id,LPAD(CuentaReceptora, 10, "0") as cuenta,Nombre,MontoPago,TiempoPago FROM pago_empresarial where TipoPago=\'Planilla\' and NitEmpresa=\''+str(Nit[0])+'\'' 
+    consulta='SELECT LPAD(NoCuenta, 10, "0") as cuenta,TipoCuenta FROM cuenta where ClienteEmpresa=\''+str(Nit[0])+'\'' 
     c.execute(consulta)
     datos= c.fetchall()
-    return render(request,'PagoPlanilla.html')
+    form=Pagoplani()
+    var ={"form":form,"datos":datos}
+    if request.method=="POST":
+        print("entro")
+        form=Pagoplani(data=request.POST)
+        cuenta=request.POST['tabla']# recivo la informacion de select html
+        if form.is_valid():
+            datos=form.cleaned_data
+            c=db.cursor()
+            select='SELECT * FROM usuario where IdUsuario=%s'
+            c.execute(select,str(numero))
+            usuario=c.fetchone()
+            c.close()
+            if usuario[2] == datos.get("Password"):
+                c=db.cursor()
+                select='SELECT * FROM pago_empresarial where IdPagoEmpresarial=%s'
+                c.execute(select,str(id))
+                empresarial=c.fetchone()
+                select='SELECT Monto FROM cuenta WHERE NoCuenta=\''+str(empresarial[5])+'\''
+                c.execute(select)
+                cuenta2=c.fetchone()
+                montoactual=cuenta2[0]+empresarial[4]
+                fecha=str(date.today()).replace("-","")
+                select ='INSERT INTO transaccion VALUES(null,\' Pago salario\',\'Desposito\',\'Q\',\''+str(empresarial[4])+'\',\''+str(montoactual)+'\',\''+fecha+'\',\''+str(empresarial[5])+'\')'
+                c.execute(select)
+                db.commit()
+                flecha=c.lastrowid
+                select='INSERT INTO trnspago VALUES(\''+str(id)+'\',\''+str(flecha)+'\')'
+                c.execute(select)
+                db.commit()
+                select='UPDATE cuenta SET Monto=%s where NoCuenta=%s'
+                c.execute(select,(str(montoactual),str(empresarial[5])))
+                db.commit()
+                ##  Aqui empieza el retiro
+                select='SELECT Monto FROM cuenta WHERE NoCuenta=\''+str(cuenta)+'\''
+                c.execute(select)
+                cuenta2=c.fetchone()
+                montoactual=cuenta2[0]-empresarial[4]
+                select ='INSERT INTO transaccion VALUES(null,\' Pago salario\',\'Retiro\',\'Q\',\''+str(empresarial[4])+'\',\''+str(montoactual)+'\',\''+fecha+'\',\''+str(cuenta)+'\')'
+                c.execute(select)
+                db.commit()
+                flecha=c.lastrowid
+                select='INSERT INTO trnspago VALUES(\''+str(id)+'\',\''+str(flecha)+'\')'
+                c.execute(select)
+                db.commit()
+                select='UPDATE cuenta SET Monto=%s where NoCuenta=%s'
+                c.execute(select,(str(montoactual),str(cuenta)))
+                db.commit()
+                c.close()               
+                messages.success(request,"empleado pagado")
+    return render(request,'PagoPlanilla.html',var)
 #---------------------------------------------------------------
 def Tercero(request):
     return render(request,'Terceros.html')

@@ -132,8 +132,8 @@ primary key (PagoEmpresarial,Transaccion),
 foreign key (PagoEmpresarial) references PAGO_EMPRESARIAL(IdPagoEmpresarial),
 foreign key (Transaccion) references TRANSACCION(IdTransaccion)
 );
-drop table TRNSPAGO;
-drop table PAGO_EMPRESARIAL;
+#drop table TRNSPAGO;
+#drop table PAGO_EMPRESARIAL;
 
 create table CHEQUERA(
 NoChequera int primary key not null auto_increment,
@@ -179,5 +179,11 @@ foreign key (CuentaAsociada) references CUENTA(NoCuenta)
 #editar el nombre de la columna contraseña por pasword
 ALTER TABLE USUARIO RENAME COLUMN Contraseña to Pasword;
 ALTER TABLE cuenta ADD PlazoPagar int AFTER Monto;
+alter table transaccion add TipoTransaccion varchar(50) after IdTransaccion;
+alter table transaccion add Descripcion varchar(50) after IdTransaccion;
+alter table transaccion add TipoMoneda varchar(10) after TipoCuenta;
+#ALTER TABLE transaccion RENAME COLUMN Tipo to TipoCuenta;
+ALTER TABLE transaccion DROP COLUMN hora;
+#ALTER TABLE transaccion DROP COLUMN TipoCuenta;
 #ALTER TABLE creditcard ADD PuntosCash int AFTER Tipo;
-drop table creditcard;
+#drop table creditcard;

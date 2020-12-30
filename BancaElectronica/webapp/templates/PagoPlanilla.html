@@ -1,0 +1,29 @@
+{% extends 'Cuenta.html'%}
+{% block content%}
+{% if messages %}
+<ul class="messages">
+       {% for message in messages %}
+       <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+       {% endfor %}
+</ul>
+{% endif %}
+<H1>PAGO DE PLANILLA O PROVEEDORES</H1>
+    <hr class="linea1">
+        <h3>AUTORIZAR PAGO</h3>
+        <form method="POST">
+            {% csrf_token %}
+            {% if datos %}
+            <label>Cuentas:</label>
+            <select name="tabla">
+            {% for datos in datos %}
+            <option value="{{datos.cuenta}}">{{datos.TipoCuenta}} {{datos.cuenta}}</option>
+            {% endfor %}
+            </select>
+            {% else %}
+                <h2>No se encontraron registros Proveedores</h2>
+            {% endif %}
+            {{form.as_p}}
+            <button type="submit" >PAGAR</button>
+        </form>
+        <hr class="linea1"><br><br>
+{% endblock %}
