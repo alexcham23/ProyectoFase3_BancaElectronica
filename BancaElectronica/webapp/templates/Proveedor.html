@@ -37,7 +37,7 @@
                 <td>
                     <a class="btn" href="{% url 'EditarProv' datos.id %}">Editar</a>
                     <a class="btn" href="{% url 'DeletProv' datos.id %}">Eliminar</a>
-                    <a href="">Pagar</a>
+                    <a class="btn" href="{% url 'pagoplan' datos.id %}">Pagar</a>
                 </td>
             </tr>
             {% endfor %}

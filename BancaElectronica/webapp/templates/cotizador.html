@@ -1,0 +1,46 @@
+{% extends 'Cuenta.html'%}
+{% block content%}
+{% if messages %}
+<ul class="messages">
+       {% for message in messages %}
+       <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+       {% endfor %}
+</ul>
+{% endif %}
+<H1>COTIZA TU PRESTAMO</H1>
+    <hr class="linea1">
+        <h3>prestamos desde Q1000 en adelante</h3>
+        <form method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit" name="cotiza" value='1'>VER PROYECCION</button>
+            <button type="submit" name="solicita" value='2'> SOLICITA TU PRESTAMO </button>
+        </form>
+    <hr class="linea1"><br><br>
+    {% if lista %}
+    <table class="table table-bodered">
+        <thead>
+            <tr>
+                <td>CAPITAL</td>
+                <td>INTERES</td>
+                <td>CUOTA A PAGAR</td>
+                <td>SALDO</td>
+            </tr>
+        </thead>
+        <TBOdy>
+            
+            {% for l in lista %}
+            
+            <tr>
+                <td>{{l.capital}}</td>
+                <td>{{ l.pago }}</td>
+                <td>{{ l.cuota }}</td>
+                <td>{{ l.cash }}</td>
+            </tr>
+            {% endfor %}
+            
+        </TBOdy>
+    </table>    
+     
+    {% endif %}
+{% endblock %}

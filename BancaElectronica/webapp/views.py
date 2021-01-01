@@ -4,6 +4,7 @@ from django import forms
 from django.contrib import messages
 from django.db.models.query_utils import select_related_descend
 from django.http.response import HttpResponseRedirect
+import decimal
 #from django.forms.forms import Form
 from .forms import *
 from django.urls import reverse
@@ -206,32 +207,32 @@ def csvImport(request):
                         #print(leer)
                         leer=leer.replace("\n","")
                         dato=leer.split(",")
-                        print(dato[1])
+                        #print(dato[0])
                         c= db.cursor()
                         consulta='SELECT * FROM empresa where Usuario=%s'
-                        print(numero)
+                        #print(numero)
                         c.execute(consulta,str(numero))
                         Nit=c.fetchone()
-                        print(Nit)
-                        consulta='SELECT * FROM cuenta WHERE NoCuenta=\''+dato[1]+'\''
+                        #print(Nit)
+                        consulta='SELECT * FROM cuenta WHERE NoCuenta=\''+dato[0]+'\''
                         c.execute(consulta)
                         info=c.fetchone()
-                        consulta='SELECT * FROM pago_empresarial WHERE TipoPago=\'Planilla\' and CuentaReceptora=\''+dato[1]+'\''
+                        consulta='SELECT * FROM pago_empresarial WHERE TipoPago=\'Planilla\' and CuentaReceptora=\''+dato[0]+'\''
                         c.execute(consulta)
                         info2=c.fetchone()
                         c.close()
                         if info:
                             if not info2:
                                 c=db.cursor();
-                                consulta='INSERT INTO pago_empresarial VALUES(null,\'Planilla\',\''+dato[0]+'\',\'Quincenal\','
-                                consulta+='\''+dato[2]+'\',\''+dato[1]+'\',\''+str(Nit[0])+'\');'            
+                                consulta='INSERT INTO pago_empresarial VALUES(null,\'Planilla\',\''+dato[1]+'\',\'Quincenal\','
+                                consulta+='\''+dato[2]+'\',\''+dato[0]+'\',\''+str(Nit[0])+'\');'            
                                 c.execute(consulta)
                                 db.commit()
                                 #return redirect('planilla')
                             else:
                                 c=db.cursor()
                                 consulta='UPDATE pago_empresarial SET Nombre=%s,MontoPago=%s WHERE  TipoPago=\'Planilla\' and CuentaReceptora=%s'   
-                                c.execute(consulta,(dato[0],dato[2],dato[1]))
+                                c.execute(consulta,(dato[1],dato[2],dato[0]))
                                 db.commit() 
                                 c.close()   
                         else:
@@ -242,17 +243,18 @@ def csvImport(request):
                             c.close()
                             if not info2:
                                 c=db.cursor();
-                                consulta='INSERT INTO pago_empresarial VALUES(null,\'Planilla\',\''+dato[0]+'\',\'Quincenal\','
-                                consulta+='\''+dato[2]+'\',\''+dato[1]+'\',\''+str(Nit[0])+'\');'            
+                                consulta='INSERT INTO pago_empresarial VALUES(null,\'Planilla\',\''+dato[1]+'\',\'Quincenal\','
+                                consulta+='\''+dato[2]+'\',\''+dato[0]+'\',\''+str(Nit[0])+'\');'            
                                 c.execute(consulta)
                                 db.commit()
                                 #return redirect('planilla')
                             else:
                                 c=db.cursor()
                                 consulta='UPDATE pago_empresarial SET Nombre=%s,MontoPago=%s WHERE  TipoPago=\'Planilla\' and CuentaReceptora=%s'   
-                                c.execute(consulta,(dato[0],dato[2],dato[1]))
+                                c.execute(consulta,(dato[1],dato[2],dato[0]))
                                 db.commit() 
-                                c.close()                           
+                                c.close()    
+                return redirect('planilla')                               
             else:
                 messages.error(request,'El archivo no existe en la ruta indicada')
     return render(request,'csv.html',var)
@@ -285,42 +287,80 @@ def PagoPlan(request,id):
             if usuario[2] == datos.get("Password"):
                 c=db.cursor()
                 select='SELECT * FROM pago_empresarial where IdPagoEmpresarial=%s'
-                c.execute(select,str(id))
+                c.execute(select,(str(id),))
                 empresarial=c.fetchone()
                 select='SELECT Monto FROM cuenta WHERE NoCuenta=\''+str(empresarial[5])+'\''
                 c.execute(select)
                 cuenta2=c.fetchone()
-                montoactual=cuenta2[0]+empresarial[4]
-                fecha=str(date.today()).replace("-","")
-                select ='INSERT INTO transaccion VALUES(null,\' Pago salario\',\'Desposito\',\'Q\',\''+str(empresarial[4])+'\',\''+str(montoactual)+'\',\''+fecha+'\',\''+str(empresarial[5])+'\')'
-                c.execute(select)
-                db.commit()
-                flecha=c.lastrowid
-                select='INSERT INTO trnspago VALUES(\''+str(id)+'\',\''+str(flecha)+'\')'
-                c.execute(select)
-                db.commit()
-                select='UPDATE cuenta SET Monto=%s where NoCuenta=%s'
-                c.execute(select,(str(montoactual),str(empresarial[5])))
-                db.commit()
-                ##  Aqui empieza el retiro
                 select='SELECT Monto FROM cuenta WHERE NoCuenta=\''+str(cuenta)+'\''
                 c.execute(select)
-                cuenta2=c.fetchone()
-                montoactual=cuenta2[0]-empresarial[4]
-                select ='INSERT INTO transaccion VALUES(null,\' Pago salario\',\'Retiro\',\'Q\',\''+str(empresarial[4])+'\',\''+str(montoactual)+'\',\''+fecha+'\',\''+str(cuenta)+'\')'
-                c.execute(select)
-                db.commit()
-                flecha=c.lastrowid
-                select='INSERT INTO trnspago VALUES(\''+str(id)+'\',\''+str(flecha)+'\')'
-                c.execute(select)
-                db.commit()
-                select='UPDATE cuenta SET Monto=%s where NoCuenta=%s'
-                c.execute(select,(str(montoactual),str(cuenta)))
-                db.commit()
-                c.close()               
-                messages.success(request,"empleado pagado")
+                estado=c.fetchone()                
+                print(int(estado[0]))
+                print(int(empresarial[4]))
+                if int(estado[0])>=int(empresarial[4]):
+                    montoactual=cuenta2[0]+empresarial[4]
+                    fecha=str(date.today()).replace("-","")
+                    select ='INSERT INTO transaccion VALUES(null,\' Pago salario\',\'Desposito\',\'Q\',\''+str(empresarial[4])+'\',\''+str(montoactual)+'\',\''+fecha+'\',\''+str(empresarial[5])+'\')'
+                    c.execute(select)
+                    db.commit()
+                    flecha=c.lastrowid
+                    select='INSERT INTO trnspago VALUES(\''+str(id)+'\',\''+str(flecha)+'\')'
+                    c.execute(select)
+                    db.commit()
+                    select='UPDATE cuenta SET Monto=%s where NoCuenta=%s'
+                    c.execute(select,(str(montoactual),str(empresarial[5])))
+                    db.commit()
+                    ##  Aqui empieza el retiro
+                    montoactual=estado[0]-empresarial[4]
+                    select ='INSERT INTO transaccion VALUES(null,\' Pago salario\',\'Retiro\',\'Q\',\''+str(empresarial[4])+'\',\''+str(montoactual)+'\',\''+fecha+'\',\''+str(cuenta)+'\')'
+                    c.execute(select)
+                    db.commit()
+                    flecha=c.lastrowid
+                    select='INSERT INTO trnspago VALUES(\''+str(id)+'\',\''+str(flecha)+'\')'
+                    c.execute(select)
+                    db.commit()
+                    select='UPDATE cuenta SET Monto=%s where NoCuenta=%s'
+                    c.execute(select,(str(montoactual),str(cuenta)))
+                    db.commit()
+                    c.close()               
+                    messages.success(request,"SE HA REALIZADO LA TRANSACCION")
+                elif cuenta2[0]==0:
+                    messages.error(request, "CUENTA SIN FONDOS") 
+                else:
+                    messages.success(request,'TUS FONDOS SON INSFICIENTES PARA REALIZAR LA TRANSACCION')   
     return render(request,'PagoPlanilla.html',var)
 #---------------------------------------------------------------
+
+# Area de Prestamos---------------------------------------------------
+def cotizar(request):
+    lista=[]
+    lista2={}
+    form=cortizador()
+    var={'form':form}
+    if request.method=="POST" and 'cotiza' in request.POST:
+        form=cortizador(data=request.POST)
+        if form.is_valid():
+            datos=form.cleaned_data
+            interes=float(intereses(datos.get("monto"),int(datos.get("TiempoPago"))))
+            print(interes)
+            cash=float(datos.get("monto"))
+            print(cash)
+            capital=float(datos.get("monto")/int(datos.get("TiempoPago")))
+            for i in range(int(datos.get("TiempoPago"))):
+                Pago_interes=cash*interes
+                cuota=capital+Pago_interes
+                otro={"capital":decimal.Decimal(capital),"pago":Pago_interes,"cuota":cuota,"cash":cash}
+                lista.append(otro)
+                cash-=capital
+            for i in lista:
+                lista2.update(i)
+            print(lista2)
+            form=cortizador()
+            var={'form':form,'lista':lista}
+    elif request.method=="POST" and 'solicita' in request.POST:
+        print("nos va bien")
+    return render(request,'cotizador.html',var)
+#----------------------------------------------------------------------
 def Tercero(request):
     return render(request,'Terceros.html')
 
@@ -412,3 +452,54 @@ def login(request):
                 else:
                     messages.error(request,'Usuario o Contraseña invalida')
     return render(request,'index.html',var)
+def intereses(cash,tiempo):
+    if cash>=1000 and cash<=5000:
+        print("entro")
+        if tiempo==12:
+            print("hola")
+            inter=0.05
+            return inter
+        elif tiempo==24:
+            return 0.04
+        elif tiempo==36:
+            return 0.0335
+        elif tiempo==48:
+            return 0.025
+    elif cash > 5000 and cash <=15000:
+        if tiempo==12:
+            return 0.0525
+        elif tiempo==24:
+            return 0.0415
+        elif tiempo==36:
+            return 0.035
+        elif tiempo==48:
+            return 0.026         
+    elif cash > 15000 and cash <=30000:
+        if tiempo==12:
+            return 0.053
+        elif tiempo==24:
+            return 0.042
+        elif tiempo==36:
+            return 0.0355
+        elif tiempo==48:
+            return 0.0265
+    elif cash > 30000 and cash <=60000:
+        if tiempo==12:
+            return 0.0535
+        elif tiempo==24:
+            return 0.0425
+        elif tiempo==36:
+            return 0.036
+        elif tiempo==48:
+            return 0.027
+    elif cash > 60000:
+        if tiempo==12:
+            return 0.0545
+        elif tiempo==24:
+            return 0.0435
+        elif tiempo==36:
+            return 0.037
+        elif tiempo==48:
+            return 0.028
+                  
+           

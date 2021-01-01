@@ -30,6 +30,7 @@
             <TBOdy>
                 {% if datos %}
                 {% for datos in datos %}
+
                 <tr>
                     <td>{{ datos.cuenta}}</td>
                     <td>{{ datos.Nombre }}</td>
@@ -38,12 +39,12 @@
                     <td>
                         <a class="btn" href="{% url 'editPLa' datos.id %}">Editar</a>
                         <a class="btn" href="{% url 'Deletplan' datos.id %}">Eliminar</a>
-                        <a href="{% url 'pagoplan' datos.id %}">Pagar</a>
+                        <a class="btn" href="{% url 'pagoplan' datos.id %}">Pagar</a>
                     </td>
                 </tr>
                 {% endfor %}
                 {% else %}
-                    <h2>No se encontraron registros Proveedores</h2>
+                    <h2>No se encontraron registros Empleados</h2>
                 {% endif %}
             </TBOdy>
         </table>    

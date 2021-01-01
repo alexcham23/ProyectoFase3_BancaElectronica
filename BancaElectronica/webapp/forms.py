@@ -2,6 +2,7 @@ from django import forms
 from django.db.models import fields
 from .models import *
 tipo=(('Mensual','Mensual'),('Quincenal','Quincenal'))
+tiempo=(('12','12'),('24','24'),('36','36'),('48','48'))
 class Login(forms.Form):
     Usuario= forms.CharField(required=True,max_length=50, help_text='Igrese su Usuario')
     Password=forms.CharField(widget=forms.PasswordInput(),help_text="Ingrese su contraseña") 
@@ -28,3 +29,9 @@ class Pagoplani(forms.Form):
     Password=forms.CharField(widget=forms.PasswordInput(),label="Contraseña",help_text="Ingrese su contraseña") 
     class Meta:
         fields=("Password")
+class cortizador(forms.Form):
+    global tiempo
+    monto = forms.DecimalField(min_value=1000 ,label= "¿Qué Monto Necesitas?   ")
+    TiempoPago =forms.ChoiceField(choices=tiempo,label="¿En cuántos meses deseas pagarlo?   ")
+    class Meta:
+        fields=("monto","TiempoPago")
