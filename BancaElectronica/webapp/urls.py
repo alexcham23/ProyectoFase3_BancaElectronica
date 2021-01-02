@@ -25,6 +25,6 @@ urlpatterns=[
     path('Eliminar-Empleado/<int:id>/',views.DeletPlanilla,name='Deletplan'),
     path('LecturaCsv/',views.csvImport,name='csv'),
     path('Autorizar-Pago-Empresarial/<int:id>/',views.PagoPlan,name='pagoplan'),
-    path('Cotizar-Prestamo', views.cotizar,name='cotiza')
+    path('Cotizar-Prestamo/',views.cotizar,name='cotiza'),
     #path('Admin/',include('Admin.urls')),
 ]

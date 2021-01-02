@@ -94,15 +94,13 @@ class Creditcard(forms.Form):
     )
     cuenta=forms.IntegerField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Ingrese el numero de cuenta',"type":"number","pattern":"[0-9]{0,12}"}), label="Cuenta Numero")
     Marca=forms.ChoiceField(required=True,choices=tipo)
-    #Moneda=forms.ChoiceField(required=True, choices=monedatipo)
+    Moneda=forms.ChoiceField(required=True, choices=monedatipo)
     Limite= forms.DecimalField(required=True,max_digits=7, decimal_places=2, widget=forms.TextInput(attrs={'placeholder': 'Ingrese el limite de la tarjeta',"type":"number"}), label="Tarjeta Limite")
     tarjeta= forms.IntegerField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Ingrese el limite de la tarjeta',"type":"number"}), label="No. Tarjeta")
     cvv=forms.IntegerField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Ingrese el CCV',"type":"number"}), label="CCV Tarjeta")
     vencimiento=forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': 'mm/yy',"type":"text"}), label="Fecha de Vencimiento")
     Nombre=forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Ingrese el Nombre',"type":"text"}), label="Nombre del Propietario")
-    
-    
     class meta:
-        fields=("cuenta","Marca","Limite","tarjeta","vencimiento","cvv","Nombre",)
+        fields=("cuenta","Marca","Moneda","Limite","tarjeta","vencimiento","cvv","Nombre",)
    
     

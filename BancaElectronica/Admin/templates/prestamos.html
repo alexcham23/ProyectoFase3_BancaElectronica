@@ -1,0 +1,42 @@
+{% extends 'admon.html' %}
+{% block content%}
+{% if messages %}
+<ul class="messages">
+       {% for message in messages %}
+       <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+       {% endfor %}
+</ul>
+{% endif %}
+<H1>AUTORIZACION DE PRESTAMO</H1>
+{% csrf_token %}
+    {% if lista %}
+    <table class="table table-bodered">
+        <thead>
+            <tr>
+                <td>USUARIO</td>
+                <td>INTERES</td>
+                <td>CUOTA A PAGAR</td>
+                <td>SALDO</td>
+                <td>MOTIVO</td>
+        </thead>
+        <TBOdy>
+            
+            {% for l in lista %}
+            <tr>
+                <td>{{l.usuario}}</td>
+                <td>{{ l.interes }}</td>
+                <td>{{ l.pagar }}</td>
+                <td>{{ l.monto }}</td>
+                <td>{{ l.motivo }}</td>
+                <td>
+                    <a href="{% url 'Presrecha'  %}">Rechazar</a>
+                    <a href="{% url 'autoripresta'%}">Autorizar</a>
+                </td>
+            </tr>
+            {% endfor %}
+            
+        </TBOdy>
+    </table>    
+     
+    {% endif %}   
+{% endblock %}

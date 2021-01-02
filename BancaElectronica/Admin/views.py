@@ -1,6 +1,7 @@
 from django.contrib.messages.api import error
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.contrib import messages
+from django.urls.base import reverse
 from .forms import *
 from datetime import date, datetime
 import MySQLdb
@@ -262,8 +263,8 @@ def CreditCard(request):
                         print("entro")
                         if datos.get("Marca")=="PREFEPUNTOS" and datos.get("Limite") >= 5000 and datos.get("Limite")<=7000:
                             c=db.cursor()
-                            consulta='INSERT INTO creditcard VALUES (\''+str(datos.get("tarjeta"))+'\',\'PREFEPUNTOS\',\'Q\',\''+str(datos.get("Limite"))+'\''
-                            consulta+=','+fecha[0]+','+fecha[0]+',\''+str(datos.get("cvv"))+'\',\'0\',\'0\',\'Individual\',\''+str(datos.get("cuenta"))+'\');'
+                            consulta='INSERT INTO creditcard VALUES (\''+str(datos.get("tarjeta"))+'\',\'PREFEPUNTOS\',\''+str(datos.get("Moneda"))+'\',\''+str(datos.get("Limite"))+'\''
+                            consulta+=','+fecha[0]+','+fecha[1]+',\''+str(datos.get("cvv"))+'\',\'0\',\'0\',\'Individual\',\''+str(datos.get("cuenta"))+'\');'
                             print(consulta)
                             c.execute(consulta) 
                             db.commit()
@@ -284,7 +285,7 @@ def CreditCard(request):
                         if datos.get("Marca")=="PREFEPUNTOS" and datos.get("Limite") >= 4500 and datos.get("Limite")<=5500:
                             c=db.cursor()
                             consulta='INSERT INTO creditcard VALUES (\''+str(datos.get("tarjeta"))+'\',\'PREFEPUNTOS\',\'Q\',\''+str(datos.get("Limite"))+'\''
-                            consulta+=','+fecha[0]+','+fecha[0]+',\''+str(datos.get("cvv"))+'\',\'0\',\'0\',\'Individual\',\''+str(datos.get("cuenta"))+'\');'
+                            consulta+=','+fecha[0]+','+fecha[1]+',\''+str(datos.get("cvv"))+'\',\'0\',\'0\',\'Individual\',\''+str(datos.get("cuenta"))+'\');'
                             print(consulta)
                             c.execute(consulta) 
                             db.commit()
@@ -408,3 +409,35 @@ def CreditCard(request):
                 
             
     return render(request,'CreditCard.html',var)
+# proceso de autorizacion de Cheque
+def PrestamoAutori(request):
+    global db
+    diccionario=[]
+    c=db.cursor()
+    select='SELECT c.IdPrestamo,c.interes,c.TiempoPagar,c.MontoPrestamo,c.Motivo,b.Usuario FROM prestamo c , usuario b  WHERE b.Idusuario=c.UsuarioSolicitante and c.Autorizacion=1;'
+    c.execute(select)
+    lista= c.fetchall()
+    c.close()
+    for i in lista:
+        otro={"id":i[0],"interes":i[1],"pagar":i[2],"monto":i[3],"motivo":i[4],"usuario":i[5]}
+        diccionario.append(otro)
+    var={'lista':diccionario,}
+    return render(request,'prestamos.html',var)
+
+def prestamorechazo(request):
+    global db
+    c=db.cursor()
+    select='UPDATE prestamo SET Estado="Activo",Autorizacion="2" where IdPrestamo=%s'
+    c.execute(select,str(id))
+    db.commit()
+    c.close
+    return redirect('autoripresta')
+def autoripresta(request):
+    global db
+    c=db.cursor()
+    select='UPDATE prestamo SET Estado="Activo",Autorizacion="2" where IdPrestamo=%s;'
+    c.execute(select,str(id))
+    db.commit()
+    c.close
+    return redirect('autoripresta')
+    
