@@ -31,7 +31,14 @@ class Pagoplani(forms.Form):
         fields=("Password")
 class cortizador(forms.Form):
     global tiempo
-    monto = forms.DecimalField(min_value=1000 ,label= "¿Qué Monto Necesitas?   ")
+    monto = forms.DecimalField(min_value=1000,initial=1000 ,label= "¿Qué Monto Necesitas?   ")
     TiempoPago =forms.ChoiceField(choices=tiempo,label="¿En cuántos meses deseas pagarlo?   ")
     class Meta:
         fields=("monto","TiempoPago")
+
+class solicitudPrestamo (forms.Form):
+    Monto = forms.DecimalField(min_value=1000,initial=1000 ,required=True,max_digits=7, decimal_places=2, widget=forms.TextInput(attrs={'placeholder': '',"type":"number"}), label="Cantidad que esta solicitando")
+    TiempoPago =forms.ChoiceField(choices=tiempo,label="¿En cuántos meses deseas pagarlo?   ")
+    descripcion = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': ' '}), label="Para que seria el prestamo ")
+    class Meta:
+        fields=('Monto','TiempoPago','descripcion')

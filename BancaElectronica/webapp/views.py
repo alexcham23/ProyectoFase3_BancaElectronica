@@ -237,7 +237,7 @@ def csvImport(request):
                                 c.close()   
                         else:
                             c=db.cursor()
-                            consult='INSERT INTO cuenta VALUES(\''+dato[1]+'\',\'Monetaria\',\'Q\',\'250\',null,'+str(date.today()).replace("-","")+',\'Activo\',15,0,null,null,null);'
+                            consult='INSERT INTO cuenta VALUES(\''+dato[0]+'\',\'Monetaria\',\'Q\',\'250\',null,'+str(date.today()).replace("-","")+',\'Activo\',15,0,null,null,null);'
                             c.execute(consult)
                             db.commit()
                             c.close()
@@ -336,6 +336,7 @@ def cotizar(request):
     lista=[]
     lista2={}
     form=cortizador()
+    #form.fields['monto'].append(1000)
     var={'form':form}
     if request.method=="POST" and 'cotiza' in request.POST:
         form=cortizador(data=request.POST)
@@ -352,14 +353,36 @@ def cotizar(request):
                 otro={"capital":decimal.Decimal(capital),"pago":Pago_interes,"cuota":cuota,"cash":cash}
                 lista.append(otro)
                 cash-=capital
-            for i in lista:
-                lista2.update(i)
-            print(lista2)
+           # for i in lista:
+                #lista2.update(i)
+            #print(lista2)
             form=cortizador()
             var={'form':form,'lista':lista}
     elif request.method=="POST" and 'solicita' in request.POST:
-        print("nos va bien")
+        return redirect('Prestamo') 
     return render(request,'cotizador.html',var)
+def prestamo(request):
+    global numero,db
+    form=solicitudPrestamo()
+    var ={"form":form}
+    if request.method=="POST":
+        #print('e0ntr5o')
+        form=solicitudPrestamo(data=request.POST)
+        if form.is_valid():
+           #print('e0ntro')
+            datos=form.cleaned_data
+            c=db.cursor()
+            fecha=str(date.today()).replace("-","")
+            interes=float(intereses(datos.get("Monto"),int(datos.get("TiempoPago"))))
+            select='INSERT INTO prestamo values(null,"'+fecha+'","'+str(interes)+'","'+str(datos.get("TiempoPago"))+'","'+str(datos.get("Monto"))+'","'+str(datos.get("descripcion"))+'","1","'+str(numero)+'")'
+            print(select)
+            c.execute(select)
+            db.commit()
+            c.close()
+            messages.success(request,'Solicitud enviada Pronto nos comunicaremos')
+            form=solicitudPrestamo()
+            var={'form':form}
+    return render(request,'Prestamo.html',var)
 #----------------------------------------------------------------------
 def Tercero(request):
     return render(request,'Terceros.html')
@@ -379,8 +402,7 @@ def Servicio(request):
 def PreCheques(request):
     return render(request,'ChequesPre.html')
 
-def Prestamo(request):
-    return render(request,'Prestamo.html')
+
     
 def login(request):
     global db,numero
